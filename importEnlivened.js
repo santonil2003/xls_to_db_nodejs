@@ -21,12 +21,12 @@ const sheetName = "Enlivened";
 
 
 
-pool.getConnection(function(err, connection) {
+pool.getConnection(function (err, connection) {
 
     try {
 
         // find the last entry 
-        connection.query("SELECT * FROM text_history ORDER BY id DESC LIMIT 1", function(err, rows) {
+        connection.query("SELECT * FROM text_history ORDER BY id DESC LIMIT 1", function (err, rows) {
 
             if (err) {
                 console.log(err);
@@ -71,7 +71,7 @@ function importIntoTempTable(sheetName, lastTextHistory, connection) {
     console.log("\n process sheet :" + sheetName);
 
     // parse sheet
-    sheets.forEach(function(sheet) {
+    sheets.forEach(function (sheet) {
 
         if (sheetName == sheet.name.trim()) {
 
@@ -85,14 +85,14 @@ function importIntoTempTable(sheetName, lastTextHistory, connection) {
 
             if (rows.length) {
 
-                rows.forEach(function(row) {
+                rows.forEach(function (row) {
 
                     // check if insert is locked..
                     if (!insertLock) {
 
 
                         // check if already imported
-                        connection.query("SELECT * FROM mcom_enlivened WHERE payout_id ='" + row[0] + "'", function(err, rows) {
+                        connection.query("SELECT * FROM mcom_enlivened WHERE payout_id ='" + row[0] + "'", function (err, rows) {
                             if (err) {
                                 console.log(err);
                             }
@@ -106,7 +106,7 @@ function importIntoTempTable(sheetName, lastTextHistory, connection) {
                                 mcomEnlivened.amount = row[2];
                                 mcomEnlivened.enlivened = parseDateExcel(row[3]);
 
-                                connection.query("INSERT INTO mcom_enlivened SET ?", mcomEnlivened, function(err, result) {
+                                connection.query("INSERT INTO mcom_enlivened SET ?", mcomEnlivened, function (err, result) {
 
                                     if (err) {
                                         console.log(err);
@@ -164,7 +164,7 @@ function importIntoTextHistory(mcomEnlivenedId, mcomEnlivened, connection) {
     textHistory.refund_id = "NULL";
     textHistory.enliven_date = mcomEnlivened.enlivened;
 
-    connection.query("INSERT INTO text_history SET ?", textHistory, function(err, result) {
+    connection.query("INSERT INTO text_history SET ?", textHistory, function (err, result) {
 
         if (err) {
             console.log(err);
@@ -174,7 +174,7 @@ function importIntoTextHistory(mcomEnlivenedId, mcomEnlivened, connection) {
 
             connection.query(
                 'UPDATE mcom_enlivened SET imported=? WHERE id=?', ['1', mcomEnlivenedId],
-                function(err, result) {
+                function (err, result) {
                     if (err) {
                         console.log(err);
                     }
@@ -241,7 +241,7 @@ function r(val) {
 -- SELECT distinct(bankfilename) FROM refund_text_bankfile order by id desc limit 3;
 -- k.id = highest text_history.id with text_history.refund_id > 0 from previous week
 
-SELECT 
+SELECT
     'UPDATE text_history SET refund_id ="',
     i.refund_text_id AS refund_id,
     '" WHERE id = ',

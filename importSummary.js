@@ -8,6 +8,7 @@ const filePath = __dirname + '/summary_data/PCIM - AC00485.xlsx';
 
 
 
+
 // custom params...
 const pool = mysql.createPool({
 	host: config.host,
@@ -20,8 +21,14 @@ const pool = mysql.createPool({
 
 const sheets = ['Enlivened', 'Cashed', 'Cancelled', 'Expired'];
 
-// start importing sheet data....
-sheets.forEach(importALL);
+
+
+fs.watchFile(filePath, (curr, prev) => {
+	if (curr.size > prev.size) {
+		// start importing sheet data....
+		sheets.forEach(importALL);
+	}
+});
 
 function importALL(sheetName) {
 
