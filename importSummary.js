@@ -21,14 +21,14 @@ const pool = mysql.createPool({
 
 const sheets = ['Enlivened', 'Cashed', 'Cancelled', 'Expired'];
 
+sheets.forEach(importALL);
 
-
-fs.watchFile(filePath, (curr, prev) => {
-	if (curr.size > prev.size) {
-		// start importing sheet data....
-		sheets.forEach(importALL);
-	}
-});
+// fs.watchFile(filePath, (curr, prev) => {
+// 	if (curr.size > prev.size) {
+// 		// start importing sheet data....
+// 		sheets.forEach(importALL);
+// 	}
+// });
 
 function importALL(sheetName) {
 
